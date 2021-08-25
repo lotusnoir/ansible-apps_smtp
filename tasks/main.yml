@@ -1,0 +1,8 @@
+---
+### Checks
+- name: Import check tasks
+  import_tasks: check.yml
+
+### Install
+- name: Import install tasks
+  import_tasks: install.yml

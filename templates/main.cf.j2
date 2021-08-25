@@ -1,0 +1,48 @@
+{{ ansible_managed | comment }}
+
+smtpd_banner = $myhostname ESMTP mailjet relay
+
+# Generic debian postfix configuration
+myorigin = {{ ansible_hostname }}
+myhostname = {{ ansible_hostname }}
+mynetworks = {{ smtpd_mynetworks }}
+biff = no
+append_dot_mydomain = no
+readme_directory = no
+compatibility_level = 2
+inet_interfaces = all
+# inet_protocols = all
+inet_protocols = ipv4, ipv6
+
+## smtpd configuration
+# tls configuration
+smtpd_tls_cert_file={{ smtpd_tls_cert_file | default("/etc/ssl/certs/ssl-cert-snakeoil.pem") }}
+smtpd_tls_key_file={{ smtpd_tls_key_file | default("/etc/ssl/private/ssl-cert-snakeoil.key") }}
+smtpd_use_tls=yes
+smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
+smtpd_tls_received_header = yes
+# force client auth
+smtpd_sasl_auth_enable = yes
+smtpd_tls_auth_only = yes
+smtpd_sasl_security_options = noanonymous
+smtpd_sasl_tls_security_options = $smtpd_sasl_security_options
+# configure sasl
+smtpd_sasl_type = cyrus
+smtpd_sasl_path = smtpd
+broken_sasl_auth_clients = yes
+
+## relay configuration:
+# relay only sasl_auth emails received by smtpd
+# force tls to connect to relay
+# use sasl_passwd map to connect to relay
+smtpd_relay_restrictions = {{ smtpd_relay_restrictions }}
+relayhost = {{ mailjet_relay }}
+smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+smtp_tls_security_level = encrypt
+smtp_tls_mandatory_ciphers = high
+smtp_sasl_auth_enable = yes
+smtp_sasl_security_options = noanonymous
+smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
+
+alias_maps = hash:/etc/aliases
+alias_database = hash:/etc/aliases

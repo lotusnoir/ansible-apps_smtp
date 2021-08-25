@@ -1,0 +1,5 @@
+{{ ansible_managed | comment }}
+
+ldap_servers: {{ saslauthd_ldap_url }}
+ldap_auth_method: bind
+ldap_search_base: {{ saslauthd_ldap_userdn }}

@@ -1,0 +1,22 @@
+---
+# if not defined both default to snakeoil default system certificates
+# smtpd_tls_cert_file:
+# smtpd_tls_key_file:
+mailjet_username: ""
+mailjet_password: ""
+mailjet_relay: "[in-v3.mailjet.com]:587"
+# If configured will use local sasldb2 plain text file
+# sasldb2_file: "/var/spool/postfix/etc/sasldb2"
+sasldb2_username: "toto@toto.com"
+sasldb2_password: "toto"
+# If enabled will use saslauthd + ldap
+saslauthd_enable: "yes"
+saslauthd_ldap_url: ""
+saslauthd_ldap_userdn: ""
+# saslauthd_ldap_binduser: ""
+# saslauthd_ldap_bindpassword: ""
+smtpd_tls_cert_file: ''
+smtpd_tls_key_file: ''
+
+smtpd_relay_restrictions: "permit_sasl_authenticated reject_unauth_destination"
+smtpd_mynetworks: "127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128"
