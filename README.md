@@ -1,38 +1,36 @@
-# Ansible Role: ansible-apps_smtp_exporter
+# ansible-apps_smtp
 
 ## Description
 
-[![Build Status](https://travis-ci.com/lotusnoir/ansible-apps_smtp_exporter.svg?branch=master)](https://travis-ci.com/lotusnoir/ansible-apps_smtp_exporter)[![License](https://img.shields.io/badge/license-Apache--2.0-brightgreen)](https://opensource.org/licenses/Apache-2.0)[![Ansible Role](https://img.shields.io/badge/ansible%20role-apps__smtp_exporter-blue)](https://galaxy.ansible.com/lotusnoir/ansible-apps_smtp_exporter/)[![GitHub tag](https://img.shields.io/badge/version-latest-blue)](https://github.com/lotusnoir/ansible-apps_smtp_exporter/tags)
+[![Galaxy Role](https://img.shields.io/badge/galaxy-apps_smtp-purple?style=flat)](https://galaxy.ansible.com/lotusnoir/apps_smtp)
+[![Version](https://img.shields.io/github/release/lotusnoir/ansible-apps_smtp.svg)](https://github.com/lotusnoir/ansible-apps_smtp/releases/latest)
+![GitHub repo size](https://img.shields.io/github/repo-size/lotusnoir/ansible-apps_smtp?color=orange&style=flat)
+[![downloads](https://img.shields.io/ansible/role/d/)](https://galaxy.ansible.com/lotusnoir/apps_smtp)
+![Ansible Quality Score](https://img.shields.io/ansible/quality/)
+[![License](https://img.shields.io/badge/license-Apache--2.0-brightgreen?style=flat)](https://opensource.org/licenses/Apache-2.0)
 
 Deploy postfix and use it as relay host through mailjet.
 
+## Requirements
+
+none
+
 ## Role variables
 
-| Name                    | Default Value            | Description                        |
-| ----------------------- | ------------------------ | -----------------------------------|
-| `mailjet_username`      |                          | mailjet username |
-| `mailjet_password`      |                          | mailjet user password |
-| `mailjet_relay`         | [in-v3.mailjet.com]:587  | mailjet server |
-| `saslauthd_enable`      | yes                      | Activation of the sasl auth support |
-| `saslauthd_ldap_url`    | ""                       | Ldap server |
-| `saslauthd_ldap_userdn` | ""                       | Ldap user DN |
-| `smtpd_tls_cert_file`   | ""                       | Path to ssl cert file |
-| `smtpd_tls_key_file:`   | ""                       | path to ssl key file |
+See [variables](/defaults/main.yml) for more details.
 
 ## Examples
 
-	---
-	- hosts: apps_smtp
-	  become: yes
-	  become_method: sudo
-	  gather_facts: yes
-	  roles:
-	    - role: ansible-apps_smtp
-	  environment: 
-	    http_proxy: "{{ http_proxy }}"
-	    https_proxy: "{{ https_proxy }}"
-	    no_proxy: "{{ no_proxy }}
+        ---
+        - hosts: apps_smtp
+          become: true
+          become_method: sudo
+          gather_facts: true
+          roles:
+            - role: ansible-apps_smtp
+
 
 ## License
 
 This project is licensed under Apache License. See [LICENSE](/LICENSE) for more details.
+
