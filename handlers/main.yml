@@ -1,18 +1,19 @@
 ---
 - name: restart postfix
-  service:
+  ansible.builtin.service:
     name: postfix
     state: restarted
 
 - name: reload postfix
-  service:
+  ansible.builtin.service:
     name: postfix
     state: reloaded
 
 - name: postmap sasl_passwd
-  command: postmap /etc/postfix/sasl_passwd
+  ansible.builtin.command: postmap /etc/postfix/sasl_passwd
+  changed_when: false
 
 - name: restart saslauthd
-  service:
+  ansible.builtin.service:
     name: saslauthd
     state: restarted

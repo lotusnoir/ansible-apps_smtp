@@ -1,12 +1,11 @@
 ---
 - name: "Install postfix packages"
-  package:
+  ansible.builtin.package:
     name: ['postfix', 'sasl2-bin', 'libsasl2-modules']
     state: present
-    install_recommends: false
 
 - name: "Configure main.cf"
-  template:
+  ansible.builtin.template:
     src: main.cf.j2
     dest: /etc/postfix/main.cf
     owner: root
@@ -16,7 +15,7 @@
   notify: restart postfix
 
 - name: "Configure sasl_passwd"
-  template:
+  ansible.builtin.template:
     src: sasl_passwd.j2
     dest: /etc/postfix/sasl_passwd
     owner: root
@@ -28,7 +27,7 @@
     - reload postfix
 
 - name: "Configure sasl module"
-  template:
+  ansible.builtin.template:
     src: smtpd.conf.j2
     dest: /etc/postfix/sasl/smtpd.conf
     owner: root
@@ -38,14 +37,15 @@
   notify: restart postfix
 
 - name: "Configure relay user"
-  command: saslpasswd2 -c -p -f {{ sasldb2_file }} {{ sasldb2_username | quote }}
+  ansible.builtin.command: saslpasswd2 -c -p -f {{ sasldb2_file }} {{ sasldb2_username | quote }}
+  changed_when: false
   args:
     stdin: "{{ sasldb2_password }}"
   notify: restart postfix
   when: sasldb2_file is defined
 
 - name: "Check sasldb2 credentials"
-  file:
+  ansible.builtin.file:
     path: "{{ sasldb2_file }}"
     mode: 0440
     owner: root
@@ -53,7 +53,7 @@
   when: sasldb2_file is defined
 
 - name: "Configure saslauthd"
-  template:
+  ansible.builtin.template:
     src: saslauthd.conf.j2
     dest: /etc/saslauthd.conf
     mode: 0440
@@ -63,7 +63,7 @@
   when: saslauthd_enable
 
 - name: "Enable saslauthd"
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/default/saslauthd
     regexp: "^START=.*$"
     line: "START=yes"
@@ -72,7 +72,7 @@
   when: saslauthd_enable
 
 - name: "Change saslauthd mechanism"
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/default/saslauthd
     regexp: '^MECHANISMS=.*$'
     line: 'MECHANISMS=ldap'
@@ -81,7 +81,7 @@
   when: saslauthd_enable
 
 - name: "Change saslauthd mechanism options"
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/default/saslauthd
     regexp: '^MECH_OPTIONS=.*$'
     line: 'MECH_OPTIONS="/etc/saslauthd.conf"'
@@ -90,7 +90,7 @@
   when: saslauthd_enable
 
 - name: "Change saslauthd socket"
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/default/saslauthd
     regexp: '^(OPTIONS=.*)-m /var/run/saslauthd(.*)$'
     backrefs: true
@@ -100,21 +100,19 @@
   when: saslauthd_enable
 
 - name: "Create saslauthd socker dir"
-  command: dpkg-statoverride --add root sasl 710 /var/spool/postfix/var/run/saslauthd
+  ansible.builtin.command: dpkg-statoverride --add root sasl 710 /var/spool/postfix/var/run/saslauthd
+  changed_when: false
   args:
     creates: /var/spool/postfix/var/run/saslauthd
-    warn: false
   when: saslauthd_enable
 
 - name: "Add postfix to sasl group"
-  user:
+  ansible.builtin.user:
     name: postfix
     groups: sasl
     append: true
   notify: restart postfix
 
 - name: rebuild newaliases
-  command: newaliases
-  args:
-    warn: false
+  ansible.builtin.command: newaliases
   changed_when: false

@@ -11,13 +11,11 @@ galaxy_info:
       versions:
         - "focal"
         - "bionic"
+        - "jammy"
     - name: "Debian"
       versions:
-        - "bullseye"
         - "buster"
-    - name: "RedHat"
-      versions:
-        - "Maipo"
+        - "bullseye"
 
   galaxy_tags:
     - smtp
